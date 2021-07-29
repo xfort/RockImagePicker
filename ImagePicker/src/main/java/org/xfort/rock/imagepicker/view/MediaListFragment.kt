@@ -226,7 +226,7 @@ class MediaListFragment : Fragment(), View.OnClickListener, OnMediaSelectListene
      * 拍照
      */
     fun capture() {
-        val perms = arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE)
+        val perms = arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE,Manifest.permission.CAMERA)
         if (AndPermission.hasPermissions(this, perms)) {
             captureHandler.startCapture(this)
         } else {
