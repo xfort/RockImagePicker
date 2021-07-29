@@ -38,7 +38,7 @@ class RockMedia {
 
     constructor(fragment: Fragment, resCallback: ActivityResultCallback<List<MediaItem>>) {
         launcher = fragment.registerForActivityResult(
-            MediaResultContract(maxCount, checkedUris), resCallback
+            MediaResultContract(), resCallback
         )
     }
 
@@ -46,13 +46,12 @@ class RockMedia {
         activity: FragmentActivity, resCallback: ActivityResultCallback<List<MediaItem>>
     ) {
         launcher = activity.registerForActivityResult(
-            MediaResultContract(maxCount, checkedUris), resCallback
+            MediaResultContract(), resCallback
         )
     }
 
     fun start() {
         try {
-
             launcher.launch(bundleOf("max" to maxCount,"checkedUris" to checkedUris))
         } catch (e: Exception) {
             e.printStackTrace()
@@ -68,15 +67,15 @@ class RockMedia {
         return frag
     }
 
-    class MediaResultContract(val maxCount: Int, val checkedUri: List<Uri>?) :
+    class MediaResultContract() :
         ActivityResultContract<Bundle, List<MediaItem>>() {
         override fun createIntent(context: Context, input: Bundle?): Intent {
             return Intent(ACTION_PICK_MEDIA).apply { //                addCategory(CATEGORY_MEDIA)
                 setDataAndType(Uri.parse("imagepicker://rock.xfort.org"), "image/picker")
-                putExtra("max", maxCount)
-                checkedUri?.let {
-                    putParcelableArrayListExtra("checkedUris", ArrayList(it))
-                }
+                //putExtra("max", maxCount)
+                //checkedUri?.let {
+                //    putParcelableArrayListExtra("checkedUris", ArrayList(it))
+                //}
                 input?.let {
                     putExtras(input)
                 }

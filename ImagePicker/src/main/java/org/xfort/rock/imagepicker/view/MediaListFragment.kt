@@ -46,6 +46,8 @@ class MediaListFragment : Fragment(), View.OnClickListener, OnMediaSelectListene
     private val captureHandler = PhotoTaker()
 
     private var maxCount = 2
+    var defaultImgs: List<Uri>? = null
+
 
     companion object {
         /**
@@ -134,17 +136,13 @@ class MediaListFragment : Fragment(), View.OnClickListener, OnMediaSelectListene
                 onThumnailViewClick(v, position)
             }
         }
+        initData()
     }
 
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
-        var defaultImgs: List<Uri>? = null
+    fun initData() {
         arguments?.let {
             maxCount = it.getInt("max", 2)
             defaultImgs = it.getParcelableArrayList<Uri>("checkedUris")
-        }
-        defaultImgs?.forEach {
-            adapter.setDefaultCheck(it)
         }
         adapter.checkMaxCount = maxCount
         mediaLoader = LoaderManager.getInstance(this)
@@ -188,6 +186,11 @@ class MediaListFragment : Fragment(), View.OnClickListener, OnMediaSelectListene
 
             override fun onLoadFinished(loader: Loader<Cursor>, data: Cursor?) {
                 adapter.swapCursor(data)
+                mediasRecyclerView?.post {
+                    defaultImgs?.forEach {
+                        adapter.setDefaultCheck(it)
+                    }
+                }
             }
 
             override fun onLoaderReset(loader: Loader<Cursor>) {
@@ -226,7 +229,7 @@ class MediaListFragment : Fragment(), View.OnClickListener, OnMediaSelectListene
      * 拍照
      */
     fun capture() {
-        val perms = arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE,Manifest.permission.CAMERA)
+        val perms = arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.CAMERA)
         if (AndPermission.hasPermissions(this, perms)) {
             captureHandler.startCapture(this)
         } else {

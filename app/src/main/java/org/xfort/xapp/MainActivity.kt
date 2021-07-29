@@ -1,5 +1,6 @@
 package org.xfort.xapp
 
+import android.net.Uri
 import android.os.Bundle
 import android.widget.ImageView
 import androidx.appcompat.app.AppCompatActivity
@@ -14,17 +15,27 @@ class MainActivity : AppCompatActivity() {
     val viewBinding by lazy { ActivityMainBinding.inflate(layoutInflater) }
 
     lateinit var imagePicker: RockMedia
+    var checkedImgs = mutableListOf<Uri>()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(viewBinding.root)
         viewBinding.imagePicker.setOnClickListener {
+            imagePicker.maxCount = 9
+            imagePicker.checkedUris = checkedImgs
             imagePicker.start()
         }
         val imgWidth = (resources.getDimension(R.dimen.meta) * 90).toInt()
 
         imagePicker = RockMedia(this) { result ->
+            if (result.isNullOrEmpty()) {
+                return@RockMedia
+            }
             viewBinding.imagesInfo.text = ""
             var ids = IntArray(result.size)
+            checkedImgs.clear()
+            viewBinding.images.referencedIds?.forEach {
+                viewBinding.root.removeView(viewBinding.root.findViewById(it))
+            }
             result.forEachIndexed { index, it ->
                 viewBinding.imagesInfo.append("${it.id}_${it.name}_${it.contentUri?.toString()}\n\n")
                 val itemImg = ImageView(this)
@@ -33,10 +44,13 @@ class MainActivity : AppCompatActivity() {
                 viewBinding.root.addView(itemImg, imgWidth, imgWidth)
                 itemImg.setImageURI(it.contentUri)
                 ids[index] = itemImg.id
+                it.contentUri?.let {
+                    checkedImgs.add(it)
+                }
             }
             viewBinding.images.referencedIds = ids
         }
-        imagePicker.maxCount = 9
+
 
     }
 }
