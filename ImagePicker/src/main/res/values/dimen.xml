@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="media_meta">1dp</dimen>
+    <dimen name="meta">1dp</dimen>
+
+</resources>

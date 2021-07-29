@@ -1,0 +1,5 @@
+<resources>
+    <string name="ok">完成</string>
+    <string name="request_permissions_x">请打开%s权限后重试</string>
+    <string name="checked_max_count_x">最多选择 %s 张</string>
+</resources>

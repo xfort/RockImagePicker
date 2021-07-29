@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:background="#000000">
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/all_medias"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/selected_medias"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:background="@drawable/ic_rectange_translucent"
+        android:minHeight="96dp"
+        android:paddingTop="16dp"
+        android:paddingBottom="16dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent" />
+
+
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/close"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginTop="8dp"
+        android:background="@drawable/ic_round_translucent"
+        android:foreground="?selectableItemBackground"
+        android:padding="12dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/ic_close" />
+
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/camera"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginRight="16dp"
+        android:background="@drawable/ic_round_translucent"
+        android:foreground="?selectableItemBackground"
+        android:padding="8dp"
+        android:scaleType="fitCenter"
+        app:layout_constraintBottom_toBottomOf="@id/close"
+        app:layout_constraintDimensionRatio="1:1"
+        app:layout_constraintRight_toLeftOf="@id/ok"
+        app:layout_constraintTop_toTopOf="@id/close"
+        app:srcCompat="@drawable/ic_photo_camera_black_24dp"
+        app:tint="@color/white" />
+
+    <!--    <TextView-->
+    <!--        android:id="@+id/count"-->
+    <!--        android:layout_width="wrap_content"-->
+    <!--        android:layout_height="0dp"-->
+    <!--        android:gravity="center_vertical"-->
+    <!--        android:textColor="@color/white"-->
+    <!--        android:textSize="14sp"-->
+    <!--        app:layout_constraintBottom_toBottomOf="@id/close"-->
+    <!--        app:layout_constraintLeft_toRightOf="@id/close"-->
+    <!--        app:layout_constraintTop_toTopOf="@id/close"-->
+    <!--        tools:text="123" />-->
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/ok"
+        style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+        android:layout_width="wrap_content"
+        android:layout_height="32dp"
+        android:layout_marginRight="16dp"
+        android:insetTop="0dp"
+        android:insetBottom="0dp"
+        android:padding="0dp"
+        android:text="@string/ok"
+        android:textColor="@color/white"
+        android:textSize="14sp"
+        app:backgroundTint="@color/translucent_black"
+        app:layout_constraintBottom_toBottomOf="@id/close"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="@id/close" />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

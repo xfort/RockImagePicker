@@ -1,0 +1,3 @@
+rootProject.name = "RockImagePicker"
+include ':app'
+include ':ImagePicker'

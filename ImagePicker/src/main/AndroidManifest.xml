@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="org.xfort.rock.imagepicker">
+
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.CAMERA" />
+
+    <application>
+        <activity
+            android:name=".view.MediaActivity"
+            android:launchMode="singleTop"
+            android:theme="@style/FullScreenTheme">
+            <intent-filter>
+                <action android:name="org.xfort.intent.action.PICK_MEDIA" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <data
+                    android:host="rock.xfort.org"
+                    android:mimeType="image/picker"
+                    android:scheme="imagepicker" />
+            </intent-filter>
+        </activity>
+
+    </application>
+</manifest>
