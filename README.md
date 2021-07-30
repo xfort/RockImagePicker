@@ -20,6 +20,6 @@ Android 图片选择库
 ```
 ```
 dependencies {
-	        implementation 'com.github.xfort:RockImagePicker:Tag'
+	        implementation 'com.github.xfort:RockImagePicker:1.0'
 	}
 ```
