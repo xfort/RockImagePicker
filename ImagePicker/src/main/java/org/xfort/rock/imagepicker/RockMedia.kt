@@ -36,29 +36,46 @@ class RockMedia {
     var chooseMediaType: Set<Int>? = null
     lateinit var launcher: ActivityResultLauncher<Bundle>
 
-    constructor(fragment: Fragment, resCallback: ActivityResultCallback<List<MediaItem>>) {
+    constructor(fragment: Fragment, resCallback: ActivityResultCallback<MediaResult>) {
         launcher = fragment.registerForActivityResult(
             MediaResultContract(), resCallback
         )
     }
 
     constructor(
-        activity: FragmentActivity, resCallback: ActivityResultCallback<List<MediaItem>>
+        activity: FragmentActivity, resCallback: ActivityResultCallback<MediaResult>
     ) {
         launcher = activity.registerForActivityResult(
             MediaResultContract(), resCallback
         )
     }
 
-    fun start() {
+    /**
+     * 开始选取图片
+     */
+    fun start(requestCode: Int, args: Bundle?) {
         try {
-            launcher.launch(bundleOf("max" to maxCount,"checkedUris" to checkedUris))
+            var dataArgs = args
+            if (dataArgs == null) {
+                dataArgs = bundleOf("max" to maxCount, "checkedUris" to checkedUris)
+            } else {
+                dataArgs.apply {
+                    putInt("max", maxCount)
+                    checkedUris?.let {
+                        putParcelableArray("checkedUris", it.toTypedArray())
+                    }
+                }
+            }
+            dataArgs.putInt("requestCode", requestCode)
+            launcher.launch(dataArgs)
         } catch (e: Exception) {
             e.printStackTrace()
         }
     }
 
-
+    /**
+     * 相册图片的fragment
+     */
     fun createMediasFragment(
         dataCallback: OnDataCallback<List<MediaItem>>
     ): MediaListFragment {
@@ -67,27 +84,29 @@ class RockMedia {
         return frag
     }
 
-    class MediaResultContract() :
-        ActivityResultContract<Bundle, List<MediaItem>>() {
+    /**
+     * 图片选择结果
+     */
+    class MediaResultContract() : ActivityResultContract<Bundle, MediaResult>() {
+
+        var requeestCode = 0
         override fun createIntent(context: Context, input: Bundle?): Intent {
+            requeestCode = input?.getInt("requestCode") ?: 0
             return Intent(ACTION_PICK_MEDIA).apply { //                addCategory(CATEGORY_MEDIA)
                 setDataAndType(Uri.parse("imagepicker://rock.xfort.org"), "image/picker")
-                //putExtra("max", maxCount)
-                //checkedUri?.let {
-                //    putParcelableArrayListExtra("checkedUris", ArrayList(it))
-                //}
                 input?.let {
                     putExtras(input)
                 }
             }
         }
 
-        override fun parseResult(resultCode: Int, data: Intent?): List<MediaItem> {
-            return if (resultCode == Activity.RESULT_OK) {
-                data?.getParcelableArrayListExtra<MediaItem>("data")?.toList() ?: emptyList()
+        override fun parseResult(resultCode: Int, data: Intent?): MediaResult {
+            var medias = if (resultCode == Activity.RESULT_OK) {
+                data?.getParcelableArrayListExtra<MediaItem>("data")?.toList()
             } else {
-                emptyList()
+                null
             }
+            return MediaResult(requeestCode, resultCode, medias, null)
         }
     }
 }
