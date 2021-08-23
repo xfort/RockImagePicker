@@ -22,11 +22,12 @@ class MainActivity : AppCompatActivity() {
         viewBinding.imagePicker.setOnClickListener {
             imagePicker.maxCount = 9
             imagePicker.checkedUris = checkedImgs
-            imagePicker.start()
+            imagePicker.start(1, null)
         }
         val imgWidth = (resources.getDimension(R.dimen.meta) * 90).toInt()
 
-        imagePicker = RockMedia(this) { result ->
+        imagePicker = RockMedia(this) { data ->
+            var result = data.medias
             if (result.isNullOrEmpty()) {
                 return@RockMedia
             }

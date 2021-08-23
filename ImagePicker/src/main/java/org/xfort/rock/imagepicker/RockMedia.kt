@@ -11,6 +11,7 @@ import androidx.activity.result.contract.ActivityResultContract
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
+import org.xfort.rock.imagepicker.view.MediaActivity
 import org.xfort.rock.imagepicker.view.MediaListFragment
 import org.xfort.xrock.listener.OnDataCallback
 
@@ -92,7 +93,10 @@ class RockMedia {
         var requeestCode = 0
         override fun createIntent(context: Context, input: Bundle?): Intent {
             requeestCode = input?.getInt("requestCode") ?: 0
-            return Intent(ACTION_PICK_MEDIA).apply { //                addCategory(CATEGORY_MEDIA)
+            return Intent(
+                context,
+                MediaActivity::class.java
+            ).apply { //                addCategory(CATEGORY_MEDIA)
                 setDataAndType(Uri.parse("imagepicker://rock.xfort.org"), "image/picker")
                 input?.let {
                     putExtras(input)
