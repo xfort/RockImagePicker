@@ -1,5 +1,6 @@
 package org.xfort.rock.imagepicker.adapter
 
+import android.content.ContentResolver
 import android.content.ContentUris
 import android.database.Cursor
 import android.net.Uri
@@ -103,8 +104,7 @@ class MediasAdapter(life: Lifecycle) : RecyclerView.Adapter<MediaVH>(),
 
     override fun onBindViewHolder(holder: MediaVH, position: Int) {
         var itemUri = UriUtils.contentUri(
-            cursors?.getLong(idColumIndex) ?: -1,
-            cursors?.getStringOrNull(columnsIndex[1]) ?: ""
+            cursors?.getLong(idColumIndex) ?: -1, cursors?.getStringOrNull(columnsIndex[1]) ?: ""
         )
         val uriKey = itemUri.toString()
         var mediaItem = mediaItemsArray[uriKey]
@@ -120,8 +120,7 @@ class MediasAdapter(life: Lifecycle) : RecyclerView.Adapter<MediaVH>(),
             checkedMedias.forEachIndexed { index, item ->
                 if (item.contentUri == it.contentUri) {
                     checkIndex = index
-                    if (item.appAdapterPosition < 0) {
-                        //来自刚刚拍照 or 初始选中的图片
+                    if (item.appAdapterPosition < 0) { //来自刚刚拍照 or 初始选中的图片
                         item.appAdapterPosition = position
                         item.mimeType = it.mimeType
                         item.name = it.name
@@ -135,9 +134,7 @@ class MediasAdapter(life: Lifecycle) : RecyclerView.Adapter<MediaVH>(),
     }
 
     override fun onBindViewHolder(
-        holder: MediaVH,
-        position: Int,
-        payloads: MutableList<Any>
+        holder: MediaVH, position: Int, payloads: MutableList<Any>
     ) {
         if (!payloads.isNullOrEmpty()) {
             var obj = payloads[0]
@@ -170,17 +167,12 @@ class MediasAdapter(life: Lifecycle) : RecyclerView.Adapter<MediaVH>(),
             var itemMedia = mediaItemsArray[data]
             if (itemMedia != null) {
                 var checked = (v as CheckedTextView).isChecked
-                if (!checked) {
-                    //当前是未选中状态
-                    if (checkedMedias.size >= checkMaxCount) {
-                        //已选满
+                if (!checked) { //当前是未选中状态
+                    if (checkedMedias.size >= checkMaxCount) { //已选满
                         Toast.makeText(
-                            v.context,
-                            v.resources.getString(
-                                R.string.checked_max_count_x,
-                                checkMaxCount.toString()
-                            ),
-                            Toast.LENGTH_SHORT
+                            v.context, v.resources.getString(
+                                R.string.checked_max_count_x, checkMaxCount.toString()
+                            ), Toast.LENGTH_SHORT
                         ).show()
                         return
                     }
@@ -221,22 +213,31 @@ class MediasAdapter(life: Lifecycle) : RecyclerView.Adapter<MediaVH>(),
         if (checkedMedias.size >= checkMaxCount) {
             return
         }
+
         var item = mediaItemsArray[checkedUri.toString()]
         if (item != null && item.appAdapterPosition >= 0) {
             updateCheckStatus(item.appAdapterPosition, true, item)
         } else {
-            item = MediaItem(
-                ContentUris.parseId(checkedUri),
-                "image/*",
-                1,
-                0,
-                0,
-                0,
-                ""
-            )
-            item.contentUri = checkedUri
-            if (checkedMedias.add(item)) {
-                mediaSelectListener?.onSelecteChange(item)
+            if (checkedUri.scheme == ContentResolver.SCHEME_CONTENT) {
+                try {
+                    item = MediaItem(
+                        ContentUris.parseId(checkedUri), "image/*", 1, 0, 0, 0, ""
+                    )
+                    item.contentUri = checkedUri
+                    if (checkedMedias.add(item)) {
+                        mediaSelectListener?.onSelecteChange(item)
+                    }
+                } catch (e: Exception) {
+                    e.printStackTrace()
+                }
+            } else {
+                item = MediaItem(
+                    0, "image/*", 1, 0, 0, 0, ""
+                )
+                item.contentUri = checkedUri
+                if (checkedMedias.add(item)) {
+                    mediaSelectListener?.onSelecteChange(item)
+                }
             }
         }
     }

@@ -22,7 +22,11 @@ object UriUtils {
                 MediaStore.Files.getContentUri(MediaStore.VOLUME_EXTERNAL)
             }
         }
-        contentUri = ContentUris.withAppendedId(contentUri, id)
+        if(id>0){
+            contentUri = ContentUris.withAppendedId(contentUri, id)
+        }else{
+            contentUri=Uri.EMPTY
+        }
         return contentUri
     }
 }
