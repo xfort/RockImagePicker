@@ -1,6 +1,19 @@
 plugins {
     id 'com.android.library'
     id 'kotlin-android'
+    id 'maven-publish'
+}
+afterEvaluate {
+    publishing {
+        publications {
+            release(MavenPublication) {
+                from components.release
+                groupId = 'org.xfort.rock'
+                artifactId = 'imagepicker'
+                version = '1.7'
+            }
+        }
+    }
 }
 
 android {
@@ -30,6 +43,7 @@ android {
     kotlinOptions {
         jvmTarget = '11'
     }
+
 }
 
 dependencies {
@@ -67,3 +81,4 @@ android.libraryVariants.all { variant ->
         }
     }
 }
+
